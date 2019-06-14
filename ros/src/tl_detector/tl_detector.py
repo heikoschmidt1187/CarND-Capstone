@@ -193,6 +193,7 @@ class TLDetector(object):
                 # get the closest waypoint to the stop line position
                 stop_line_wp = self.get_closest_waypoint(stop_line[0], stop_line[1])
 
+
                 # update the difference value if needed
                 sl_difference = stop_line_wp - car_position
 
