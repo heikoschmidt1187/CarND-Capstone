@@ -25,6 +25,13 @@ class Controller(object):
         ts = .02    # Sample time
         self.velocity_lowpass = LowPassFilter(tau, ts)
 
+        # steerin controller based on the givven YawController class
+        self.steering_controller = YawController(wheel_base,
+                steer_ratio,
+                0.1,    # TODO: what is a good value for min speed?
+                max_lat_accel,
+                max_steer_angle)
+
         # member to holt last call timestamp
         self.last_timestamp = rospy.get_time()
 
@@ -89,11 +96,12 @@ class Controller(object):
                 if brake < .1:
                     brake = 0.
 
-            # TODO: get steering from yaw controller
-            steering = 0.
+            steering = self.steering_controller.get_steering(target_lin_vel,
+                    target_ang_vel,
+                    filtered_velocity)
         else:
             # ensure to reset controller to avoid accumulating error
-            #self.throttle_pid.reset();
+            self.throttle_pid.reset();
 
             throttle = 0.
             brake = 0.
