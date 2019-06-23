@@ -4,3 +4,19 @@ build
 devel
 
 profile.tmp
+
+*model.ckpt*
+
+models-289a2f99a7df528f6193a5ab3ee284ff3112b731.zip
+
+TrafficDetectionNet/requirements.txt
+TrafficDetectionNet/workspace/tl_classifier/TrafficLightDetection.ipynb
+TrafficDetectionNet/workspace/tl_classifier/Untitled.ipynb
+
+*.record
+*.record
+
+TrafficDetectionNet/workspace/tl_classifier/training/checkpoint
+TrafficDetectionNet/workspace/tl_classifier/training/events.out.tfevents*
+TrafficDetectionNet/workspace/tl_classifier/training/graph.pbtxt
+
