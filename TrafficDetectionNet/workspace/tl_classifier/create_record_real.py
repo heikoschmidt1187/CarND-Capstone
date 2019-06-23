@@ -7,7 +7,7 @@ import yaml
 import os
 
 import sys
-sys.path.insert(0, '../../models/research/object_detection/utils')
+sys.path.insert(0, '../../models/object_detection/utils')
 import dataset_util
 
 
@@ -16,9 +16,9 @@ flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
 FLAGS = flags.FLAGS
 
 LABEL_DICT =  {
-    "Green" : 1,
-    "Red" : 2,
-    "Yellow" : 3,
+    "Red" : 1,
+    "Yellow" : 2,
+    "Green" : 3,
     "off" : 4,
     }
 
@@ -83,7 +83,7 @@ def main(_):
     examples = yaml.load(open(INPUT_YAML, 'rb').read())
 
     #examples = examples[:10]  # for testing
-    len_examples = len(examples)
+    len_examples = float(len(examples))
     print("Loaded ", len(examples), "examples")
 
     for i in range(len(examples)):
