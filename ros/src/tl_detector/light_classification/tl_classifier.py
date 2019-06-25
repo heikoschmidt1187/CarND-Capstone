@@ -1,6 +1,9 @@
 from styx_msgs.msg import TrafficLight
 import tensorflow as tf
 import os
+import cv2
+import numpy as np
+import rospy
 
 IMAGE_WIDTH = 300
 IMAGE_HEIGHT = 300
@@ -11,6 +14,11 @@ class TLClassifier(object):
         self.session = None
         self.image_ctr = 0
         self.classes = {1: TrafficLight.RED, 2: TrafficLight.YELLOW, 3: TrafficLight.GREEN, 4: TrafficLight.UNKNOWN }
+
+        self.counter = 0
+
+        self.class_index = None
+        self.prob = None
 
         self.load_model(os.path.dirname(os.path.realpath(__file__)) + '/../../../../TrafficDetectionNet/workspace/tl_classifier/model_frozen_sim/frozen_inference_graph.pb')
 
@@ -24,13 +32,18 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        class_index, prob = self.predict(image)
+        tf.logging.set_verbosity(tf.logging.INFO)
 
-        if class_index is not None:
-            rospy.logdebug("class %d, prob: %f", class_index, prob)
+        if self.counter == 0:
+            self.class_index, self.prob = self.predict(image)
+            self.counter = 5        # only use every 5th image to save bandwidth
 
-        return class_index
+        self.counter = self.counter - 1
 
+        if self.class_index is not None:
+            rospy.logwarn("class %d, prob: %f", self.class_index, self.prob)
+
+        return self.class_index
 
     def load_model(self, path):
         config = tf.ConfigProto()
@@ -48,10 +61,10 @@ class TLClassifier(object):
                 tf.import_graph_def(od_graph_def, name='')
 
     def predict(self, numpy_image, thresh=0.5):
-        image_tensor = self.model_graph.get_tensor_by_name('image_tensor:0')
-        detection_boxes = self.model_graph.get_tensor_by_name('detection_boxes:0')
-        detection_scores = self.model_graph.get_tensor_by_name('detection_scores:0')
-        detection_classes = self.model_graph.get_tensor_by_name('detection_classes:0')
+        image_tensor = self.graph.get_tensor_by_name('image_tensor:0')
+        detection_boxes = self.graph.get_tensor_by_name('detection_boxes:0')
+        detection_scores = self.graph.get_tensor_by_name('detection_scores:0')
+        detection_classes = self.graph.get_tensor_by_name('detection_classes:0')
         numpy_image = self.preprocess_image(numpy_image)
 
         (boxes, scores, classes) = self.session.run([detection_boxes, detection_scores, detection_classes],
