@@ -104,7 +104,7 @@ class WaypointUpdater(object):
         temp_list = []
 
         # stop some waypoints in front of the stopline to avoid the car's nose to go over
-        stop_idx = max(self.stop_line_idx - closest_idx - 2, 0)
+        stop_idx = max(self.stop_line_idx - closest_idx - 4, 0)
 
         # for each of the waypoints between us and the stopline, set the velocity
         for i, wp in enumerate(base_wp):
