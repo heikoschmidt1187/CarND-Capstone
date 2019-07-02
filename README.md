@@ -30,12 +30,19 @@ The traffic light detection and classification node is used to identify the near
 
 For this task I used the [Tensorflow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection). For training, I used a pre-trained Single Shot MultiBox Detector model from [here](https://github.com/mkoehnke/CarND-Capstone-TrafficLightDetection).
 
-<TODO> Example images
+Here are some example image from the classification:
+
+![no light](data/NoLight.png)
+![red light](data/Red.png)
+![yellow light](data/Yellow.png)
+![green light](data/Green.png)
+
 
 ### Known Problems and Difficulties during Project Work
 
 * I had massive performance problems when camera is switched on in the simulator, no matter if I used the given VM from Udacity, the docker image, the workspace or even a local installation on a well powered machine with GPU. Even without detection the car isn't able to follow the waypoints due to massive delays. The only way to make it run was a Ubuntu live system on my working PC
 * While waiting at a traffic light the car sometimes is not able to full stop and starts accelerating for a short time, before it's stopping completely. This is currently addressed by stopping four waypoints in front of the stopline waypoint.
+* As this is an individual submission and the software is not intended to run on Carla according to Udacity, the net was trained against real world images but never optimized on that and there's no distinction in the software to select different models for real world and simulation.
 
 
 # Installation Instructions
