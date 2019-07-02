@@ -6,7 +6,7 @@ This is the project repo for the final project of the Udacity Self-Driving Car N
 |------|----------------------|
 |Heiko Schmidt | udacity@heikoschmidt.info   |
 
-<TODO> Add image and video
+![title image](data/Title.png)
 
 ## Project Description
 
