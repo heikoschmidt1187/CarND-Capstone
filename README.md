@@ -6,6 +6,39 @@ This is the project repo for the final project of the Udacity Self-Driving Car N
 |------|----------------------|
 |Heiko Schmidt | udacity@heikoschmidt.info   |
 
+<TODO> Add image and video
+
+## Project Description
+
+In this project, a ROS environment is used to control a car driving on a multi lane street. The goal is to drive one full lap while passing given waypoints, detecting traffic light states and stop in front of a corresponding stopline to the traffic light.
+
+### Waypoint Updater
+
+The waypoint updater node's task is to publish a fixed number of waypoints in front of the car's current position. The waypoints are provided by data from Udacity at specific points in space and have a target velocity attached. This target velocity must not be higher than the speed limit and needs to be adjusted to make the car come to a stop at a red traffic light's stop line. The movement is controled by the drive-by-wire node.
+
+###  Drive-By-Wire Node
+
+The DBW node represents the car's controller. It's task is to control the throttle, brake and steering and published all as ROS twist commands to the car. It uses the twist controller module.
+
+### Twist Controller
+
+The twist controller is used in the above mentioned DBW node to control acceleration and steering. The module uses controllers (PID for throttle and steering, low pass for speed).
+
+### Traffic Light Detection and Classification
+
+The traffic light detection and classification node is used to identify the nearest traffic light, to check it's state from given camera images and to coordinate where and when to stop and when to start driving again.
+
+For this task I used the [Tensorflow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection). For training, I used a pre-trained Single Shot MultiBox Detector model from [here](https://github.com/mkoehnke/CarND-Capstone-TrafficLightDetection).
+
+<TODO> Example images
+
+### Known Problems and Difficulties during Project Work
+
+* I had massive performance problems when camera is switched on in the simulator, no matter if I used the given VM from Udacity, the docker image, the workspace or even a local installation on a well powered machine with GPU. Even without detection the car isn't able to follow the waypoints due to massive delays. The only way to make it run was a Ubuntu live system on my working PC
+* While waiting at a traffic light the car sometimes is not able to full stop and starts accelerating for a short time, before it's stopping completely. This is currently addressed by stopping four waypoints in front of the stopline waypoint.
+
+
+# Installation Instructions
 Please use **one** of the two installation options, either native **or** docker installation.
 
 ### Native Installation
