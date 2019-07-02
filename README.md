@@ -44,6 +44,8 @@ Here are some example image from the classification:
 * While waiting at a traffic light the car sometimes is not able to full stop and starts accelerating for a short time, before it's stopping completely. This is currently addressed by stopping four waypoints in front of the stopline waypoint.
 * As this is an individual submission and the software is not intended to run on Carla according to Udacity, the net was trained against real world images but never optimized on that and there's no distinction in the software to select different models for real world and simulation.
 
+***Note***
+I shrinked down the repository by deleting the classifier training data. This is due to the limitation for the Udacity project submission in repository size. If you need any data or information on that, please feel free to contact me.
 
 # Installation Instructions
 Please use **one** of the two installation options, either native **or** docker installation.
