@@ -58,10 +58,6 @@ class TLDetector(object):
         self.last_wp = -1
         self.state_count = 0
 
-        # flag to activate training image collection from simulator
-        self.generate_training_images = False
-        self.current_image_ctr = 0
-
         rospy.spin()
 
     def pose_cb(self, msg):
@@ -69,6 +65,11 @@ class TLDetector(object):
 
     def waypoints_cb(self, waypoints):
         self.waypoints = waypoints
+
+        rospy.logerr('waypoint_cb was called')
+
+        if not self.waypoints:
+            rospy.logerr('!!! waypoint_cb called but no waypoints present!?')
 
         if not self.waypoints_2d:
             self.waypoints_2d = [[waypoint.pose.pose.position.x, waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
@@ -148,17 +149,6 @@ class TLDetector(object):
         return light.state
         """
 
-    def generate_training_image(self, light):
-        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
-
-        # generate classifier training images
-        if self.generate_training_images:
-            cv2.imwrite("/home/student/CarND-Capstone/training_images_simulator/image" + `self.current_image_ctr` + ".png", cv_image);
-            self.current_image_ctr = self.current_image_ctr + 1
-
-        # TODO classify according to light
-
-
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its
             location and color
@@ -171,13 +161,13 @@ class TLDetector(object):
         light = None
         light_wp = None
 
-        # generate training images for the classifier if needed
-        if self.generate_training_images:
-            self.generate_training_image(light)
-
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
-        if(self.pose):
+
+        if not self.waypoints:
+            rospy.logerr('!!! No waypoints present - waypoint_cb was not called!')
+
+        if self.pose and self.waypoints:
             car_position = self.get_closest_waypoint(self.pose.pose.position.x, self.pose.pose.position.y)
 
             #TODO find the closest visible traffic light (if one exists)

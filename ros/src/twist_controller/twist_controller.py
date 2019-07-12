@@ -52,7 +52,7 @@ class Controller(object):
         # TODO: pid to control steering, throttle and maybe brake
 
         # Return throttle, brake, steer
-        if dbw_enabled:
+        if dbw_enabled and (target_lin_vel is not None) and (target_ang_vel is not None) and (current_lin_vel is not None) and (current_ang_vel is not None):
 
             # init control values before calculation
             throttle = 0.
