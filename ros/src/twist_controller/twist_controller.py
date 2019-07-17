@@ -13,8 +13,8 @@ class Controller(object):
                 wheel_radius, wheel_base, steer_ratio, max_lat_accel, max_steer_angle):
 
         # hyperparameters for throttle PID controller
-        kp = 1.5
-        ki = 0.001
+        kp = 0.3
+        ki = 0.1
         kd = 0.
         mn = 0.      # minimum throttle value
         mx = 0.2    # maximum throttle value
