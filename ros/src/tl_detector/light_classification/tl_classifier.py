@@ -9,7 +9,7 @@ IMAGE_WIDTH = 300
 IMAGE_HEIGHT = 300
 
 class TLClassifier(object):
-    def __init__(self):
+    def __init__(self, is_site):
         # tensorflow frozen graph
         self.graph = None
 
@@ -28,7 +28,10 @@ class TLClassifier(object):
         # load fixed simulated model - may change according to simulation or real
         # but as this is an individual submission it will never be used on Carla according to
         # project description --> set fixed
-        self.load_model(os.path.dirname(os.path.realpath(__file__)) + '/../../../../TrafficDetectionNet/workspace/tl_classifier/model_frozen_sim/frozen_inference_graph.pb')
+        if is_site:
+            self.load_model(os.path.dirname(os.path.realpath(__file__)) + '/../../../../TrafficDetectionNet/workspace/tl_classifier/model_frozen_real/frozen_inference_graph.pb')
+        else:
+            self.load_model(os.path.dirname(os.path.realpath(__file__)) + '/../../../../TrafficDetectionNet/workspace/tl_classifier/model_frozen_sim/frozen_inference_graph.pb')
 
     def get_classification(self, image):
         """Determines the color of the traffic light in the image

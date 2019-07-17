@@ -48,15 +48,16 @@ class TLDetector(object):
 
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
-        self.bridge = CvBridge()
-        self.light_classifier = TLClassifier()
-        self.listener = tf.TransformListener()
-
         # traffic light states and waypoint
         self.state = TrafficLight.UNKNOWN
         self.last_state = TrafficLight.UNKNOWN
         self.last_wp = -1
         self.state_count = 0
+
+        # classifier members
+        self.bridge = CvBridge()
+        self.light_classifier = TLClassifier(self.config['is_site'])
+        self.listener = tf.TransformListener()
 
         rospy.spin()
 
@@ -88,7 +89,7 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
-        light_wp, state = self.process_traffic_lights()
+        light_wp, new_state = self.process_traffic_lights()
 
         '''
         Publish upcoming red lights at camera frequency.
@@ -96,12 +97,12 @@ class TLDetector(object):
         of times till we start using it. Otherwise the previous stable state is
         used.
         '''
-        if self.state != state:
+        if self.state != new_state:
             self.state_count = 0
-            self.state = state
+            self.state = new_state
         elif self.state_count >= STATE_COUNT_THRESHOLD:
             self.last_state = self.state
-            light_wp = light_wp if state == TrafficLight.RED else -1
+            light_wp = light_wp if new_state == TrafficLight.RED else -1
             self.last_wp = light_wp
             self.upcoming_red_light_pub.publish(Int32(light_wp))
         else:
@@ -194,9 +195,9 @@ class TLDetector(object):
                     light_wp = stop_line_wp
 
         if light and light_wp:
-            state = self.get_light_state(light)
-            return light_wp, state
-        self.waypoints = None
+            new_state = self.get_light_state(light)
+            return light_wp, new_state
+
         return -1, TrafficLight.UNKNOWN
 
 if __name__ == '__main__':

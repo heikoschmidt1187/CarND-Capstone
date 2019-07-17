@@ -45,15 +45,18 @@ def control(sid, data):
 
 @sio.on('obstacle')
 def obstacle(sid, data):
-    bridge.publish_obstacles(data)
+    #bridge.publish_obstacles(data)
+    pass
 
 @sio.on('lidar')
 def obstacle(sid, data):
-    bridge.publish_lidar(data)
+    #bridge.publish_lidar(data)
+    pass
 
 @sio.on('trafficlights')
 def trafficlights(sid, data):
     bridge.publish_traffic(data)
+    pass
 
 @sio.on('image')
 def image(sid, data):
